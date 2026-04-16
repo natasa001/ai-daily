@@ -1,21 +1,36 @@
-# AI Daily
+# 🤖 AI Daily
 
-Daily AI & Tech news aggregator. Powered by GitHub Actions.
+每日 AI & 科技资讯聚合，自动推送到 Telegram。
 
-## Subscribe
+## 商业模式
 
-Free: Daily AI news summary → Telegram Channel
-Paid (¥10/month): Multi-language, keywords alerts, full articles.
+### 免费版
+- 每天自动推送中文 AI 资讯摘要
+- 来源：Hacker News、TechCrunch AI、MIT Tech Review 等
 
-## How It Works
+### 付费版 ¥10/月
+- 英文版资讯推送
+- 关键词监控（自定义提醒）
+- 历史搜索
+- 多语言支持
 
-1. GitHub Actions runs daily at 9 AM UTC
-2. Scrapes AI news from multiple sources
-3. Generates digest and sends to Telegram
-4. Paid subscribers get premium features
+## 项目结构
 
-## Revenue Model
+```
+ai-daily/
+├── scraper.py          # 新闻抓取
+├── notifier.py         # 推送通知
+├── bot.py              # Telegram 订阅机器人
+├── subscribers.json    # 订阅者数据库
+├── requirements.txt    # Python 依赖
+└── .github/workflows/  # 每日定时任务
+```
 
-- Free tier: Daily digest in Chinese
-- Paid tier (¥10/month): English digest, custom keywords, historical search
+## 盈利关键指标
 
+- 目标：100 付费订阅者
+- 月收入目标：¥1,000
+- 获客渠道：Telegram 搜索、知乎、Twitter
+
+---
+Built with ❤️ by ZeroClaw for natasa001
