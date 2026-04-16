@@ -1,0 +1,65 @@
+name: Daily AI News
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      lang:
+        description: "Language (zh/en)"
+        required: false
+        default: "zh"
+
+jobs:
+  scrape-and-notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Scrape news
+        run: python scraper.py
+        env:
+          TZ: UTC
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-${{ github.run_number }}
+          path: |
+            digest_zh.txt
+            digest_en.txt
+            items.json
+
+      - name: Send free tier digest (Chinese)
+        if: env.TELEGRAM_BOT_TOKEN != ''
+        run: python notifier.py zh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          FREE_TIER_CHAT_IDS: ${{ secrets.FREE_TIER_CHAT_IDS }}
+
+      - name: Send paid tier digest (English)
+        if: env.TELEGRAM_BOT_TOKEN != ''
+        run: python notifier.py en --paid
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PAID_TIER_CHAT_IDS: ${{ secrets.PAID_TIER_CHAT_IDS }}
+
+      - name: Discord notification
+        if: env.DISCORD_WEBHOOK != ''
+        run: python notifier.py zh
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
