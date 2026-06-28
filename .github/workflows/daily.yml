@@ -9,6 +9,12 @@ on:
         description: "Language (zh/en)"
         required: false
         default: "zh"
+  push:
+    branches: [main]
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   scrape-and-notify:
@@ -32,7 +38,7 @@ jobs:
         env:
           TZ: UTC
 
-      - name: Upload artifacts
+      - name: Upload artifact (txt/json)
         uses: actions/upload-artifact@v4
         with:
           name: digest-${{ github.run_number }}
@@ -40,6 +46,11 @@ jobs:
             digest_zh.txt
             digest_en.txt
             items.json
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
 
       - name: Send free tier digest (Chinese)
         if: env.TELEGRAM_BOT_TOKEN != ''
@@ -62,4 +73,18 @@ jobs:
         run: python notifier.py zh
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  deploy:
+    needs: scrape-and-notify
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
