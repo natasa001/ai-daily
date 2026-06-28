@@ -80,7 +80,7 @@ def fetch_html(source):
                 "id": hashlib.md5(href.encode()).hexdigest()[:12],
             })
     except Exception as e:
-        print(f"[ERROR] Failed to fetch {source[name]}: {e}", flush=True)
+        print(f"[ERROR] Failed to fetch {source['name']}: {e}", flush=True)
     return items
 
 
@@ -122,10 +122,10 @@ def format_digest(items, lang="zh"):
         lines.append("─" * 24)
         lines.append("")
         for i, item in enumerate(items, 1):
-            lines.append(f"{i}. {item[title]}")
-            lines.append(f"   🔗 {item[url]}")
+            lines.append(f"{i}. {item['title']}")
+            lines.append(f"   🔗 {item['url']}")
             if item["summary"]:
-                lines.append(f"   📝 {item[summary][:80]}...")
+                lines.append(f"   📝 {item['summary'][:80]}...")
             lines.append("")
         lines.append("─" * 24)
         lines.append("付费订阅 ¥10/月：英文版 / 关键词监控 / 历史搜索")
@@ -135,8 +135,8 @@ def format_digest(items, lang="zh"):
         lines.append(f"📰 {len(items)} items today\n")
         lines.append("─" * 24)
         for i, item in enumerate(items, 1):
-            lines.append(f"{i}. {item[title]}")
-            lines.append(f"   🔗 {item[url]}")
+            lines.append(f"{i}. {item['title']}")
+            lines.append(f"   🔗 {item['url']}")
             lines.append("")
 
     return "\n".join(lines)

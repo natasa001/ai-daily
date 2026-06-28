@@ -73,7 +73,7 @@ def main():
         return
 
     today = datetime.utcnow().strftime("%Y-%m-%d")
-    header = f"🤖 AI Daily [{today}] - {付费版 if is_paid else 免费版}"
+    header = f"🤖 AI Daily [{today}] - {'付费版' if is_paid else '免费版'}"
 
     target_ids = PAID_TIER_CHAT_IDS if is_paid else FREE_TIER_CHAT_IDS
     if not target_ids or target_ids == [""]:
